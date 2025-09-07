@@ -27,4 +27,13 @@ export class RecipeUsecase {
       throw new Error('Recipe not found');
     }
   }
+
+  async deleteRecipe(id: number): Promise<boolean> {
+    const result = await this.recipeRepository.deleteRecipe(id);
+    if (result === 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

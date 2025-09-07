@@ -47,8 +47,12 @@ export async function recipeRoutes(request: FastifyInstance): Promise<void> {
     '/:id',
     { schema: { params: recipeParamsJsonSchema } },
     async (request: FastifyRequest<{ Params: RecipeParams }>, reply) => {
-      const mockResult = { message: 'Recipe successfully removed!' };
-      return reply.status(200).send(mockResult);
+      const isDeleted = await recipeUsecase.deleteRecipe(request.params.id);
+      if (isDeleted) {
+        return reply.status(200).send({ message: 'Recipe successfully removed!' });
+      } else {
+        return reply.status(200).send({ message: 'No recipe found' });
+      }
     },
   );
 }
