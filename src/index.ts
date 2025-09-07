@@ -4,8 +4,11 @@ import { recipeRoutes } from '@/domains/recipes/routes.js';
 import mysqlConnection from './infrastructures/mysql-connection.js';
 import { RecipeRepository } from './domains/recipes/repositories.js';
 import { Container } from 'typedi';
+import { errorHandler } from './errors/handler.js';
 
 const server = fastify();
+server.setErrorHandler(errorHandler(server));
+
 await mysqlConnection(server, {
   type: 'mysql',
   user: process.env.MYSQL_USERNAME,

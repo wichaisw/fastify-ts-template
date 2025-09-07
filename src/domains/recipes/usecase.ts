@@ -1,6 +1,7 @@
 import { Container } from 'typedi';
 import { RecipeRepository } from './repositories.js';
 import type { Recipe } from './types.js';
+import { RecipeError } from '@/errors/recipe.js';
 
 export class RecipeUsecase {
   constructor(private readonly recipeRepository: RecipeRepository = Container.get(RecipeRepository)) {
@@ -24,16 +25,14 @@ export class RecipeUsecase {
     if (result === 1) {
       return recipe;
     } else {
-      throw new Error('Recipe not found');
+      throw new RecipeError('No recipe found', 200);
     }
   }
 
-  async deleteRecipe(id: number): Promise<boolean> {
+  async deleteRecipe(id: number): Promise<void> {
     const result = await this.recipeRepository.deleteRecipe(id);
-    if (result === 1) {
-      return true;
-    } else {
-      return false;
+    if (result === 0) {
+      throw new RecipeError('No recipe found', 200);
     }
   }
 }
