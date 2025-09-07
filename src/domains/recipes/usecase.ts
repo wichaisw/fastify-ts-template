@@ -10,4 +10,12 @@ export class RecipeUsecase {
   createRecipe(recipe: Recipe): Promise<Recipe> {
     return this.recipeRepository.createRecipe(recipe);
   }
+
+  getRecipes(): Promise<Recipe[]> {
+    return this.recipeRepository.getRecipes();
+  }
+
+  getRecipeById(id: number): Promise<Recipe> {
+    return this.recipeRepository.getRecipeById(id);
+  }
 }

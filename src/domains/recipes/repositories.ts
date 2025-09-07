@@ -17,4 +17,14 @@ export class RecipeRepository {
     const [rows] = await this.connection.query('SELECT * FROM recipes WHERE id = ?', [insertId]);
     return rows[0] as Recipe;
   }
+
+  async getRecipes(): Promise<Recipe[]> {
+    const [rows] = await this.connection.query('SELECT * FROM recipes');
+    return rows as Recipe[];
+  }
+
+  async getRecipeById(id: number): Promise<Recipe> {
+    const [rows] = await this.connection.query('SELECT * FROM recipes WHERE id = ?', [id]);
+    return rows[0] as Recipe;
+  }
 }
