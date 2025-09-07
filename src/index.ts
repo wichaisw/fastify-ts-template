@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import fastify from 'fastify';
 import { recipeRoutes } from '@/domains/recipes/routes.js';
-const server = fastify();
 import mysqlConnection from './infrastructures/mysql-connection.js';
+import { RecipeRepository } from './domains/recipes/repositories.js';
+import { Container } from 'typedi';
 
-console.log(process.env.MYSQL_USER);
+const server = fastify();
 mysqlConnection(server, {
   type: 'mysql',
-  username: process.env.MYSQL_USER,
+  user: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
   port: process.env.MYSQL_PORT ?? '3306',
@@ -15,6 +16,10 @@ mysqlConnection(server, {
 });
 
 server.register(recipeRoutes, { prefix: '/recipes' });
+
+// dependency injection
+Container.set('mysql', server.mysql);
+Container.set(RecipeRepository, new RecipeRepository());
 
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {
