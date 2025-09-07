@@ -1,14 +1,15 @@
 import { z } from 'zod';
 
-// recipes: [
-//   {
-//     id: 1,
-//     title: 'Chicken Curry',
-//     making_time: '45 min',
-//     serves: '4 people',
-//     ingredients: 'onion, chicken, seasoning',
-//     cost: '1000',
-//   },
+const zodToFastifySchema = <T extends z.ZodType>(schema: T) => {
+  const { $schema, ...jsonSchema } = z.toJSONSchema(schema);
+  return jsonSchema;
+};
+
+const recipeParamsSchema = z.object({
+  id: z.number(),
+});
+export type RecipeParams = z.infer<typeof recipeParamsSchema>;
+export const recipeParamsJsonSchema = zodToFastifySchema(recipeParamsSchema);
 
 const recipeSchema = z.object({
   id: z.number(),
@@ -18,12 +19,10 @@ const recipeSchema = z.object({
   ingredients: z.string(),
   cost: z.string(),
 });
-
 export type Recipe = z.infer<typeof recipeSchema>;
 
 export const recipeResponseSchema = z.object({
   message: z.string(),
   recipe: z.array(recipeSchema),
 });
-
 export type RecipeResponse = z.infer<typeof recipeResponseSchema>;
