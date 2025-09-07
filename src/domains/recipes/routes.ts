@@ -29,21 +29,17 @@ export async function recipeRoutes(request: FastifyInstance): Promise<void> {
 
   request.patch(
     '/:id',
-    { schema: { params: recipeParamsJsonSchema } },
-    async (request: FastifyRequest<{ Params: RecipeParams }>, reply) => {
-      const mockResult = {
-        message: 'Recipe successfully updated!',
-        recipe: [
-          {
-            title: 'Tomato Soup',
-            making_time: '15 min',
-            serves: '5 people',
-            ingredients: 'onion, tomato, seasoning, water',
-            cost: '450',
-          },
-        ],
-      };
-      return reply.status(200).send(mockResult);
+    { schema: { params: recipeParamsJsonSchema, body: recipeJsonSchema } },
+    async (request: FastifyRequest<{ Params: RecipeParams; Body: Recipe }>, reply) => {
+      const { title, making_time, serves, ingredients, cost } = request.body;
+      const recipe: Recipe = await recipeUsecase.updateRecipe(request.params.id, {
+        title,
+        making_time,
+        serves,
+        ingredients,
+        cost,
+      });
+      return reply.status(200).send({ message: 'Recipe successfully updated!', recipe });
     },
   );
 
