@@ -1,24 +1,33 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import type { Recipe, RecipeResponse } from './types.js';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
+import { RecipeUsecase } from './usecase.js';
 
 export async function recipeRoutes(request: FastifyInstance): Promise<void> {
+  const recipeUsecase = new RecipeUsecase();
   request.post('/', async (_: FastifyRequest<{}>, reply) => {
-    const mockPostResult = {
-      message: 'Recipe successfully created!',
-      recipe: [
-        {
-          id: '3',
-          title: 'Tomato Soup',
-          making_time: '15 min',
-          serves: '5 people',
-          ingredients: 'onion, tomato, seasoning, water',
-          cost: '450',
-          created_at: '2016-01-12 14:10:12',
-          updated_at: '2016-01-12 14:10:12',
-        },
-      ],
-    };
-    return reply.status(200).send(mockPostResult);
+    const recipe = await recipeUsecase.createRecipe({
+      id: 3,
+      title: 'Tomato Soup',
+      making_time: '15 min',
+      serves: '5 people',
+      ingredients: 'onion, tomato, seasoning, water',
+      cost: '450',
+    });
+    // const mockPostResult = {
+    //   message: 'Recipe successfully created!',
+    //   recipe: [
+    //     {
+    //       id: '3',
+    //       title: 'Tomato Soup',
+    //       making_time: '15 min',
+    //       serves: '5 people',
+    //       ingredients: 'onion, tomato, seasoning, water',
+    //       cost: '450',
+    //       created_at: '2016-01-12 14:10:12',
+    //       updated_at: '2016-01-12 14:10:12',
+    //     },
+    //   ],
+    // };
+    return reply.status(200).send(recipe);
   });
 
   request.get('/', async (_: FastifyRequest<{}>, reply) => {
