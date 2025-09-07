@@ -6,7 +6,7 @@ export async function recipeRoutes(request: FastifyInstance): Promise<void> {
   const recipeUsecase = new RecipeUsecase();
   request.post('/', { schema: { body: recipeJsonSchema } }, async (request: FastifyRequest<{ Body: Recipe }>, reply) => {
     const { title, making_time, serves, ingredients, cost } = request.body;
-    const recipes: Recipe[] = await recipeUsecase.createRecipe({
+    const recipeList: Recipe[] = await recipeUsecase.createRecipe({
       title,
       making_time,
       serves,
@@ -14,17 +14,17 @@ export async function recipeRoutes(request: FastifyInstance): Promise<void> {
       cost,
     });
 
-    return reply.status(200).send(recipes);
+    return reply.status(200).send({ message: 'Recipe successfully created!', recipe: recipeList });
   });
 
   request.get('/', async (_: FastifyRequest<{}>, reply) => {
-    const recipes: Recipe[] = await recipeUsecase.getRecipes();
-    return reply.status(200).send(recipes);
+    const recipeList: Recipe[] = await recipeUsecase.getRecipes();
+    return reply.status(200).send({ recipes: recipeList });
   });
 
   request.get('/:id', { schema: { params: recipeParamsJsonSchema } }, async (request: FastifyRequest<{ Params: RecipeParams }>, reply) => {
-    const recipes: Recipe[] = await recipeUsecase.getRecipeById(request.params.id);
-    return reply.status(200).send({ message: 'Recipe details by id', recipes });
+    const recipeList: Recipe[] = await recipeUsecase.getRecipeById(request.params.id);
+    return reply.status(200).send({ message: 'Recipe details by id', recipe: recipeList });
   });
 
   request.patch(
@@ -32,14 +32,14 @@ export async function recipeRoutes(request: FastifyInstance): Promise<void> {
     { schema: { params: recipeParamsJsonSchema, body: recipeJsonSchema } },
     async (request: FastifyRequest<{ Params: RecipeParams; Body: Recipe }>, reply) => {
       const { title, making_time, serves, ingredients, cost } = request.body;
-      const recipe: Recipe = await recipeUsecase.updateRecipe(request.params.id, {
+      const recipeList: Recipe[] = await recipeUsecase.updateRecipe(request.params.id, {
         title,
         making_time,
         serves,
         ingredients,
         cost,
       });
-      return reply.status(200).send({ message: 'Recipe successfully updated!', recipe });
+      return reply.status(200).send({ message: 'Recipe successfully updated!', recipe: recipeList });
     },
   );
 

@@ -27,10 +27,10 @@ export class RecipeUsecase {
     return [recipe];
   }
 
-  async updateRecipe(id: number, recipe: Recipe): Promise<Recipe> {
+  async updateRecipe(id: number, recipe: Recipe): Promise<Recipe[]> {
     const result = await this.recipeRepository.updateRecipe(id, recipe);
     if (result === 1) {
-      return recipe;
+      return [recipe];
     } else {
       throw new RecipeError('No recipe found', 200);
     }
