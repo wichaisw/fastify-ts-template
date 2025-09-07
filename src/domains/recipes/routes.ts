@@ -1,17 +1,17 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { RecipeUsecase } from './usecase.js';
-import { recipeParamsJsonSchema, type Recipe, type RecipeParams } from './types.js';
+import { recipeJsonSchema, recipeParamsJsonSchema, type Recipe, type RecipeParams } from './types.js';
 
 export async function recipeRoutes(request: FastifyInstance): Promise<void> {
   const recipeUsecase = new RecipeUsecase();
-  request.post('/', async (_: FastifyRequest<{}>, reply) => {
+  request.post('/', { schema: { body: recipeJsonSchema } }, async (request: FastifyRequest<{ Body: Recipe }>, reply) => {
+    const { title, making_time, serves, ingredients, cost } = request.body;
     const recipe = await recipeUsecase.createRecipe({
-      id: 3,
-      title: 'Tomato Soup',
-      making_time: '15 min',
-      serves: '5 people',
-      ingredients: 'onion, tomato, seasoning, water',
-      cost: '450',
+      title,
+      making_time,
+      serves,
+      ingredients,
+      cost,
     });
 
     return reply.status(200).send(recipe);
