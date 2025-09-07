@@ -8,16 +8,23 @@ export class RecipeUsecase {
     this.recipeRepository = recipeRepository;
   }
 
-  createRecipe(recipe: Recipe): Promise<Recipe> {
-    return this.recipeRepository.createRecipe(recipe);
+  async createRecipe(recipe: Recipe): Promise<Recipe[]> {
+    try {
+      await this.recipeRepository.createRecipe(recipe);
+    } catch (error) {
+      throw new RecipeError('Recipe creation failed!', 200, { required: 'title, making_time, serves, ingredients, cost' });
+    }
+
+    return [recipe];
   }
 
   getRecipes(): Promise<Recipe[]> {
     return this.recipeRepository.getRecipes();
   }
 
-  getRecipeById(id: number): Promise<Recipe> {
-    return this.recipeRepository.getRecipeById(id);
+  async getRecipeById(id: number): Promise<Recipe[]> {
+    const recipe = await this.recipeRepository.getRecipeById(id);
+    return [recipe];
   }
 
   async updateRecipe(id: number, recipe: Recipe): Promise<Recipe> {

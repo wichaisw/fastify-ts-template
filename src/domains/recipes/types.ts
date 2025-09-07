@@ -13,11 +13,11 @@ export const recipeParamsJsonSchema = zodToFastifySchema(recipeParamsSchema);
 
 const recipeSchema = z.object({
   id: z.number().optional(),
-  title: z.string(),
-  making_time: z.string(),
-  serves: z.string(),
-  ingredients: z.string(),
-  cost: z.string(),
+  title: z.string().optional(),
+  making_time: z.string().optional(),
+  serves: z.string().optional(),
+  ingredients: z.string().optional(),
+  cost: z.string().optional(),
 });
 export const recipeJsonSchema = zodToFastifySchema(recipeSchema);
 export type Recipe = z.infer<typeof recipeSchema>;

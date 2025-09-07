@@ -6,7 +6,7 @@ export async function recipeRoutes(request: FastifyInstance): Promise<void> {
   const recipeUsecase = new RecipeUsecase();
   request.post('/', { schema: { body: recipeJsonSchema } }, async (request: FastifyRequest<{ Body: Recipe }>, reply) => {
     const { title, making_time, serves, ingredients, cost } = request.body;
-    const recipe = await recipeUsecase.createRecipe({
+    const recipes: Recipe[] = await recipeUsecase.createRecipe({
       title,
       making_time,
       serves,
@@ -14,17 +14,17 @@ export async function recipeRoutes(request: FastifyInstance): Promise<void> {
       cost,
     });
 
-    return reply.status(200).send(recipe);
+    return reply.status(200).send(recipes);
   });
 
   request.get('/', async (_: FastifyRequest<{}>, reply) => {
-    const recipesList = await recipeUsecase.getRecipes();
-    return reply.status(200).send(recipesList);
+    const recipes: Recipe[] = await recipeUsecase.getRecipes();
+    return reply.status(200).send(recipes);
   });
 
   request.get('/:id', { schema: { params: recipeParamsJsonSchema } }, async (request: FastifyRequest<{ Params: RecipeParams }>, reply) => {
-    const recipe: Recipe = await recipeUsecase.getRecipeById(request.params.id);
-    return reply.status(200).send({ message: 'Recipe details by id', recipe });
+    const recipes: Recipe[] = await recipeUsecase.getRecipeById(request.params.id);
+    return reply.status(200).send({ message: 'Recipe details by id', recipes });
   });
 
   request.patch(

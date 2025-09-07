@@ -15,7 +15,7 @@ services:
       - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - recipe-network
     healthcheck:
@@ -35,11 +35,11 @@ services:
       - '8080:8080'
     environment:
       - NODE_ENV=production
-      - MYSQL_HOST=mysql
+      - MYSQL_HOST=database-1.cjckackqgiiz.ap-southeast-1.rds.amazonaws.com
       - MYSQL_PORT=3306
-      - MYSQL_USERNAME=recipe_user
-      - MYSQL_PASSWORD=recipe_password
-      - MYSQL_DATABASE=recipe_db
+      - MYSQL_USERNAME=admin
+      - MYSQL_PASSWORD=mana-givery
+      - MYSQL_DATABASE=mana
     depends_on:
       mysql:
         condition: service_healthy
@@ -64,11 +64,11 @@ services:
       - '8081:8080'
     environment:
       - NODE_ENV=development
-      - MYSQL_HOST=mysql
+      - MYSQL_HOST=database-1.cjckackqgiiz.ap-southeast-1.rds.amazonaws.com
       - MYSQL_PORT=3306
-      - MYSQL_USERNAME=recipe_user
-      - MYSQL_PASSWORD=recipe_password
-      - MYSQL_DATABASE=recipe_db
+      - MYSQL_USERNAME=admin
+      - MYSQL_PASSWORD=mana-givery
+      - MYSQL_DATABASE=mana
     volumes:
       - .:/app
       - /app/node_modules
