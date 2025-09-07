@@ -18,4 +18,13 @@ export class RecipeUsecase {
   getRecipeById(id: number): Promise<Recipe> {
     return this.recipeRepository.getRecipeById(id);
   }
+
+  async updateRecipe(id: number, recipe: Recipe): Promise<Recipe> {
+    const result = await this.recipeRepository.updateRecipe(id, recipe);
+    if (result === 1) {
+      return recipe;
+    } else {
+      throw new Error('Recipe not found');
+    }
+  }
 }
