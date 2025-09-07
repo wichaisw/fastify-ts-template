@@ -6,7 +6,7 @@ import { RecipeRepository } from './domains/recipes/repositories.js';
 import { Container } from 'typedi';
 
 const server = fastify();
-mysqlConnection(server, {
+await mysqlConnection(server, {
   type: 'mysql',
   user: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
