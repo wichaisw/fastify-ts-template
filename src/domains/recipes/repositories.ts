@@ -35,4 +35,9 @@ export class RecipeRepository {
     );
     return result.affectedRows;
   }
+
+  async deleteRecipe(id: number): Promise<number> {
+    const [result] = await this.connection.query('DELETE FROM recipes WHERE id = ?', [id]);
+    return result.affectedRows;
+  }
 }
