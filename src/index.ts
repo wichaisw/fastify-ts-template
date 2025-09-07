@@ -24,7 +24,7 @@ server.register(recipeRoutes, { prefix: '/recipes' });
 Container.set('mysql', server.mysql);
 Container.set(RecipeRepository, new RecipeRepository());
 
-server.listen({ port: 8080 }, (err, address) => {
+server.listen({ port: 8080, host: '0.0.0.0' }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
